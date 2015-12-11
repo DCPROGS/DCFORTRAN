@@ -1,0 +1,18 @@
+	SUBROUTINE VSWAP(P,K,INEW,KP)
+C SWAPS ELEMENTS OF VECTOR P (AS MSWAP)
+c	REAL*8 P(KP),P1(10)
+	allocatable::p1
+	REAL*8 P(KP),P1(:)
+	INTEGER INEW(KP)
+C
+	allocate(p1(kp))
+	DO 1 I=1,K
+1	P1(I)=P(INEW(I))
+C COPY RESULT BACK TO P
+	DO 2 I=1,K
+2	P(I)=P1(I)
+	deallocate(p1)
+	RETURN
+	END
+
+

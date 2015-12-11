@@ -1,0 +1,42 @@
+	subroutine RAC2(ROW,COL,AMAT,K,W,W1,NR,NC,NA)
+	
+C RAC2 is same as RAC, but uses AMAT rather than EM,EN
+C SUBROUTINE TO CALC COEFFICIENTS W1(M) (REAL*8) AS
+C ROW*A(M)*COL WHERE ROW IS 1 X K, A(M) IS K X K AND COL
+C IS K X 1. THE A(M) ARE SUPPLIED AS EM,EN.
+C ALSO OUTPUTS REAL*4 VALUES IN W(M)
+C   DECLARED DIMENSIONS IN CALLING PROG:
+C	NR FOR ROW(1,NR)
+C	NC FOR COL(NC,1)
+C	NA FOR EM(NA,NA),EN(NA,NA)
+C
+
+      use iso_c_binding
+      
+      !DEC$ ATTRIBUTES DLLEXPORT :: RAC2
+      !DEC$ ATTRIBUTES ALIAS:'RAC2':: RAC2
+      !DEC$ ATTRIBUTES VALUE :: NR, NC,NA
+      !DEC$ ATTRIBUTES REFERENCE :: ROW,COL,AMAT,W1,W
+
+	IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+	
+      integer :: NR, NC,NA
+      
+	REAL*8 :: ROW(1,NR),COL(NC,1),AMAT(NA,NA,NA),W1(100)
+	REAL*4 :: W(100)
+	
+
+c
+	do m=1,k
+	   W1(m)=0.0d0
+	   do L=1,k
+		do n=1,k
+		   W1(m)=W1(m)+ROW(1,L)*AMAT(L,n,m)*COL(n,1)
+		enddo
+	   enddo
+	   W(m)=SNGL(W1(m))
+	enddo
+c
+	RETURN
+	END
+

@@ -1,0 +1,143 @@
+
+Copyright D. Colquhoun, I. Vais, University College London 1997
+All rights reserved. (LF90/Gino version)
+
+CVFIT PROGRAM
+
+Executable file: CVFIT.EXE                                                   
+Last modified on 17-Feb-1998 at 18:14:08, length (bytes) =   6592000
+Date of analysis: 18-Feb-1998
+Time of analysis: 12:33:26
+  Machine = optiplexgxi                     LPT1    
+Data from: C:\CVDAT.Dat                     
+Data from disk file    22
+ data set #  1  atropine                                                    
+ data set #  2  afdx                                                        
+ data set #  3  atropine                                                    
+ data set #  4  atropine                                                    
+ data set #  5  atropine                                                    
+ data set #  6                                                              
+
+File: carolann data                                               
+ Data set #   1   atropine                                                    
+Obs #       X value      Y value           s(Y)       weight
+  1      0.320000E-09    32591.0        1.00000        1.00000    
+  2      0.100000E-08    31449.0        1.00000        1.00000    
+  3      0.320000E-08    20582.0        1.00000        1.00000    
+  4      0.100000E-07    17252.0        1.00000        1.00000    
+  5      0.320000E-07    11292.0        1.00000        1.00000    
+  6      0.100000E-06    3888.00        1.00000        1.00000    
+  7      0.320000E-06    1719.00        1.00000        1.00000    
+  8      0.100000E-05    591.000        1.00000        1.00000    
+ Data set #   2   afdx                                                        
+Obs #       X value      Y value           s(Y)       weight
+  1      0.320000E-06    23592.0        1.00000        1.00000    
+  2      0.100000E-05    18621.0        1.00000        1.00000    
+  3      0.320000E-05    9744.00        1.00000        1.00000    
+  4      0.100000E-04    5012.00        1.00000        1.00000    
+  5      0.320000E-04    1998.00        1.00000        1.00000    
+  6      0.100000E-03    799.000        1.00000        1.00000    
+ Data set #   3   atropine                                                    
+Obs #       X value      Y value           s(Y)       weight
+  1      0.100000E-08    5426.00        1.00000        1.00000    
+  2      0.320000E-08    5686.00        1.00000        1.00000    
+  3      0.100000E-07    6133.00        1.00000        1.00000    
+  4      0.320000E-07    3564.00        1.00000        1.00000    
+  5      0.999999E-07    2158.00        1.00000        1.00000    
+  6      0.320000E-06    799.000        1.00000        1.00000    
+  7      0.100000E-05    354.000        1.00000        1.00000    
+  8      0.320000E-05    177.000        1.00000        1.00000    
+
+Weighting method =  (1) Weights constant. Error from residuals.                
+
+
+Copyright D. Colquhoun, I. Vais, University College London 1997
+All rights reserved. (LF90/Gino version)
+
+CVFIT PROGRAM
+
+Executable file: CVFIT.EXE                                                   
+Last modified on 18-Feb-1998 at 12:35:20, length (bytes) =   6592000
+Date of analysis: 18-Feb-1998
+Time of analysis: 12:35:31
+  Machine = optiplexgxi                     LPT1    
+Data from: C:\CVDAT.Dat                     
+Data from disk file    22
+ data set #  1  atropine                                                    
+ data set #  2  afdx                                                        
+ data set #  3  atropine                                                    
+ data set #  4  atropine                                                    
+ data set #  5  atropine                                                    
+ data set #  6                                                              
+
+File: carolann data                                               
+ Data set #   2   afdx                                                        
+Obs #       X value      Y value           s(Y)       weight
+  1      0.320000E-06    23592.0        1.00000        1.00000    
+  2      0.100000E-05    18621.0        1.00000        1.00000    
+  3      0.320000E-05    9744.00        1.00000        1.00000    
+  4      0.100000E-04    5012.00        1.00000        1.00000    
+  5      0.320000E-04    1998.00        1.00000        1.00000    
+  6      0.100000E-03    799.000        1.00000        1.00000    
+
+Weighting method =  (1) Weights constant. Error from residuals.                
+
+
+File: carolann data                                               
+
+FIT TO DATA SET #            2
+  afdx                                                        
+
+FITTING:
+Equation = (3) Hill equation(s) (inc. or dec./common K or max)         
+Weighting =  (1) Weights constant. Error from residuals.                
+Separate fit to each set: no common parameters
+
+Number of free parameters =   3
+Number of different x values =    6
+
+Initial guesses: SSD =  0.46674E+07
+0.000     0.248E+05 0.287E-05  1.14    
+
+Number of points fitted =        6
+Number of parameters estimated =        3
+Minimum SSD (Smin) =  0.102132E+07
+Error S.D.= sqrt(Smin/df) =   583.472      (    3 degrees of freedom)
+
+Scale factors= 0.100E+050.100E-04 1.00    
+
+
+Observed information matrix = 
+  0.370177E-05
+   16569.1     0.100557E+15
+  0.152337E-01-0.126424E+08  423.993    
+
+Covariance matrix = 
+  0.382077E+07
+ -0.649250E-03 0.120307E-12
+  -156.636     0.269143E-07 0.878888E-02
+
+Correlation matrix=
+  1.000000
+ -0.957616 1.000000
+ -0.854773 0.827697 1.000000
+
+Determinant of INFO matrix= 0.438643E+25
+
+
+Parameter  1:    Y(inf)           =  0.000000     (fixed)
+Parameter  2: Ymax1 (set 2)       =   28557.5     Approx SD=   1954.68    
+Parameter  3:    K1 (set 2)       =  0.177900E-05 Approx SD=  0.346853E-06
+Parameter  4: nH1 (set 2)         =  0.938592     Approx SD=  0.937490E-01
+No of function eval=      134
+Minimum SSD= 0.102132E+07 Max log-likelihood=  -1.50000    
+WARNING: SOME PARAMETERS POORLY DEFINED -TRY DIFFERENT GUESSES
+SET #=   2   afdx                                                        
+
+    X value         Y (observed)    Y (calc)        Ycalc-Yobs
+   0.320000E-06     23592.0         23800.7         208.703    
+   0.100000E-05     18621.0         18047.5        -573.514    
+   0.320000E-05     9744.00         10441.2         697.240    
+   0.100000E-04     5012.00         4715.83        -296.173    
+   0.320000E-04     1998.00         1777.85        -220.147    
+   0.100000E-03     799.000         636.158        -162.842    

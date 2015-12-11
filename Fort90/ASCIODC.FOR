@@ -1,0 +1,208 @@
+	subroutine ASCIODC(read,ioff,ilinhead,ncols,nrows,ntot,Xnum,ndim,
+     & datfil,header1)
+c To read/write ascii files
+c read=true/false (false-write)
+c Modified 02/23/95 03:08pm to detect whether in graphics mode and write
+c to screen appropriately (assumes dialog box 1 defined and open before
+c entry if in graphics)
+c
+c INPUT FOR READING
+c Where are numbers: give either:
+c ioff=offset (bytes) to first numerical value (ie byte # for start
+c   of 1st digit) (0 if not known)
+c or
+c ilinhead=number of lines of header (ignored if -1).
+c	If ilinhead => 0 then expects first number to start
+c	  after (ilinhead) <CR><LF> encountered
+c	If ilinhead=-1 on input, then attempt made to locate header and
+c	  return ilinhead.  All rows in which the first 'number' contains
+c	  characters that are not valid in a number (inc spaces) are
+c	  counted as header (and blank rows at the top are counted as
+c	  part of header, but blank rows after the first valid number
+c	  are returned as zero values at present).
+c
+c Number of values
+c ncols= number of columns of values
+c nrows=number of rows
+c Ntot=total number of values=nrows*ncols
+c If ncols=0 then assumes columns defined by <CR><LF> and returns value
+c if nrows=0 assumes numbers are separated by either space(s) (ascii 32)
+c	or comma, and returns nrows
+c If both 0 then works out number of values as above, and checks vs
+c total file length
+c
+	real*4 xnum(ndim)
+	character*18 ascnum
+	character datfil*33,ndev*2
+c	character*1 ans,UC
+	character*1 string(:),header(:)
+	character header1*(*)
+	allocatable :: string,header
+	logical read,digchar1
+	logical present,graph
+	integer*2 videotyp
+c
+	graph=VIDEOTYP().eq.18	!may not be in graphics for refitting
+	if(graph) then
+	   ict=11	!text colour for DIALOG box
+	endif
+c
+	if(.not.read) goto 1
+c READ SECTION
+25	continue
+	ndev='C:'
+	if(graph) then
+	   call DISCDIALOG(1,'Disk partition to read ASCII data from',
+     &	idisc,ndev,-1,1,ict)
+	else
+	   print 20
+20	   format(' Disk partition to read ASCII data from')
+	   call DISCNUM1(idisc,ndev,-1,1)
+	endif
+	if(idisc.eq.-1) goto 999	!if ESC hit in discnum
+	if(ndev.eq.'A:') then
+	   if(graph) then
+		pause ' Now mount data floppy:'
+	   else
+		call WDIALOG(1,' Now mount data floppy:',ict)
+	   endif
+	endif
+	datfil(1:3)=ndev//'\'
+	if(graph) then
+	   call TDIALOG(1,'File name to read ASCII data from:',
+     &	datfil,33,.false.,ict)
+	else
+	   call TITENT0('File name to read ASCII data from:',
+     &	datfil,33,.false.)
+	endif
+	INQUIRE(file=DATFIL,exist=present,flen=len)
+	if(.not.present) then
+	   call BELL(2)
+	   if(graph) then
+		n=NBLANK(datfil)
+		call WDIALOG(1,datfil(1:n)//' does not exist',ict)
+	   else
+		print 24,DATFIL
+24		format('&',1x,a12,' does not exist')
+	   endif
+	   goto 25
+	else if(present.and.len.gt.0) then
+         OPEN(unit=14,file=DATFIL,status='UNKNOWN',
+     &    access='TRANSPARENT')
+	   allocate(string(1:len))
+	   do i=1,len
+		read(14,75) string(i)
+75		format(a1)
+	   enddo
+	   CLOSE(unit=14)
+	endif
+c
+c Now locate data
+c	if(ioff.le.0) then
+c	   call FINDCRLF(ilinhead,string,len,ioff)
+c	endif
+c If neither ioff nor ilinhead specified, try to locate start of data by
+c looking for the first line that begins with a number rather than a letter
+	if(ioff.le.0.and.ilinhead.ge.0) then
+	   call FINDCRLF(ilinhead,string,len,ioff)
+	else if(ioff.le.0.and.ilinhead.lt.0) then
+c	   Check if the first 'number' is number or text -if it is a number
+c	   assume there is no header
+	   i1=1
+	   call FINDSEP(i1,string,len,isep,iend,inext)
+	   n=iend-i1+1
+	   do i=1,n
+		ival=ichar(string(i+i1-1))
+		if(.not.digchar1(ival)) goto 3	!not a number, so have a header
+	   enddo
+	   irow=0
+	   ioff=1		!ilinhead=0
+	   goto 23		!first number found
+3	   continue
+c now look at first 'number' in 2nd, 3rd ...row and check whether it is a valid
+c number
+	   irow=1
+	   do while(inext.lt.len)
+	      call FINDCRLF(irow,string,len,ioff)
+		call FINDSEP(ioff,string,len,isep,iend,inext)
+		n=iend-ioff+1
+		if(n.le.0) goto 31	!not a number, so check next row
+		do i=1,n
+		   ival=ichar(string(i+ioff-1))
+		   if(.not.digchar1(ival)) goto 31	!not a number, so check next row
+		enddo
+		goto 23		!first number found
+31		irow=irow+1
+	    enddo
+	    if(graph) then
+		call WDIALOG(1,'Header not located',12)
+	    else
+		print 26
+26		format(' Header not located')
+	    endif
+23	    continue
+	    ilinhead=irow
+	endif
+	istart=ioff
+c
+c Print header one line at a time
+	if(istart.gt.1) then
+	   lenhead=istart-1
+	   allocate(header(1:lenhead))
+	   do i=1,lenhead
+		header(i)=string(i)
+		header1(i:i)=string(i)
+	   enddo
+	   if(graph) then
+		n=NBLANK(header1)
+		call WDIALOG(1,header1(1:n),ict)
+	   else
+		print 4
+4		format(1x)
+		do i=1,lenhead
+		   print 5, header(i)
+5		   format('&',a1)
+		enddo
+	   endif
+	   deallocate(header)
+	endif
+c
+c Now locate the numbers
+	inext=istart
+	ncols=1
+	nrows=0
+	j=0		!counts converted numbers
+	do while(inext.lt.len)
+	   i1=inext
+	   call FINDSEP(i1,string,len,isep,iend,inext)
+	   if(isep.eq.1.and.iflag.ne.1) then
+		ncols=ncols+1
+	   else if(isep.eq.2) then
+		iflag=1	!so cols counted first time only
+		nrows=nrows+1
+	   else if(isep.eq.0) then
+		if(graph) then
+		   call WDIALOG(1,'No separator found',12)
+		else
+		   print *, 'No separator found'
+		endif
+	   endif
+	   n=iend-i1+1
+	   ascnum='                  '
+	   do i=1,n
+		if(i.gt.18) goto 6
+	      ascnum(i:i)=string(i+i1-1)
+	   enddo
+6	   j=j+1
+	   call CHTOREAL(ascnum,xnum(j))
+	enddo
+	ntot=j
+	RETURN
+c
+c
+c WRITE SECTION
+c======
+1	continue
+999	RETURN
+	end
+
